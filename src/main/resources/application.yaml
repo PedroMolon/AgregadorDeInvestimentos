@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: AgregadorDeInvestimentos
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/agregador_de_investimentos
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: validate
+      generate-ddl: true
+      show-sql: true
+  flyway:
+    enabled: true
