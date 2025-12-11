@@ -3,9 +3,9 @@ package com.pedromolon.agregadordeinvestimentos.service;
 import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
 import com.pedromolon.agregadordeinvestimentos.entity.User;
+import com.pedromolon.agregadordeinvestimentos.exceptions.UserNotFoundException;
 import com.pedromolon.agregadordeinvestimentos.mapper.UserMapper;
 import com.pedromolon.agregadordeinvestimentos.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class UserService {
     public UserResponse getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
     public UserResponse createUser(UserRequest request) {
@@ -42,7 +42,7 @@ public class UserService {
 
     public UserResponse updateUser(Long id, UserRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
         User.builder()
                 .username(request.username())
@@ -57,7 +57,7 @@ public class UserService {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("User not found with id: " + id);
+            throw new UserNotFoundException("User not found with id: " + id);
         }
     }
 
