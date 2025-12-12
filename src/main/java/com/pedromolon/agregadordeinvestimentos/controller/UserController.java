@@ -2,12 +2,12 @@ package com.pedromolon.agregadordeinvestimentos.controller;
 
 import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
+import com.pedromolon.agregadordeinvestimentos.security.JWTUserData;
 import com.pedromolon.agregadordeinvestimentos.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -19,34 +19,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    public ResponseEntity<UserResponse> updateUser(
+            @AuthenticationPrincipal JWTUserData user,
+            @RequestBody UserRequest request
+    ) {
+        Long userId = user.userId();
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, request));
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
-    }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id, request));
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(
+            @AuthenticationPrincipal JWTUserData user
+    ) {
+        Long userId = user.userId();
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 

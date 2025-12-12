@@ -6,26 +6,20 @@ import com.pedromolon.agregadordeinvestimentos.entity.User;
 import com.pedromolon.agregadordeinvestimentos.exceptions.UserNotFoundException;
 import com.pedromolon.agregadordeinvestimentos.mapper.UserMapper;
 import com.pedromolon.agregadordeinvestimentos.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-    }
-
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toResponse)
-                .toList();
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse getUserById(Long id) {
@@ -34,21 +28,16 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
-    public UserResponse createUser(UserRequest request) {
-        return userMapper.toResponse(
-                userRepository.save(userMapper.toEntity(request))
-        );
-    }
-
     public UserResponse updateUser(Long id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        User.builder()
-                .username(request.username())
-                .email(request.email())
-                .password(request.password())
-                .build();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+
+        if (user.getPassword() != null && request.password() != null) {
+            user.setPassword(passwordEncoder.encode(request.password()));
+        }
 
         return userMapper.toResponse(userRepository.save(user));
     }
