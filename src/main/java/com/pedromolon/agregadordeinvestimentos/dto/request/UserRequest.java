@@ -1,18 +1,20 @@
 package com.pedromolon.agregadordeinvestimentos.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserRequest(
-        @NotNull(message = "User cannot be null")
+        @NotBlank(message = "Username cannot be blank")
+        @Size(min = 3, message = "Username must be at least 3 characters")
         String username,
 
-        @NotNull(message = "Email cannot be null")
+        @NotBlank(message = "Email cannot be blank")
         @Email(message = "Email must be valid")
+        @Size(max = 255, message = "Email cannot be longer than 255 characters")
         String email,
 
-        @NotNull(message = "Password cannot be null")
+        @NotBlank(message = "Password cannot be blank")
         @Size(min = 6, message = "Password must be at least 6 characters")
         String password
 ) {}

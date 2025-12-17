@@ -51,7 +51,7 @@ public class UserServiceTest {
     @Test
     void shouldUpdateUserSuccessfully() throws Exception {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode(anyString())).thenReturn("password");
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded");
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userMapper.toResponse(any(User.class))).thenReturn(userResponse);
 
