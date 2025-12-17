@@ -55,6 +55,12 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Account> accounts;
+
+    public <T> User(long l, String testUser, String mail, String password, Set<T> singleton, Object o, Object o1) {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles

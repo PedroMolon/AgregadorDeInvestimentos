@@ -35,6 +35,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Object> handleAccountNotFoundException(AccountNotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Account not found");
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
