@@ -10,10 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -56,7 +53,7 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
     public <T> User(long l, String testUser, String mail, String password, Set<T> singleton, Object o, Object o1) {
     }
