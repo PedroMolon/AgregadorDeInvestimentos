@@ -18,6 +18,6 @@ public class AccountStockId {
     private Long accountId;
 
     @Column(name = "stock_id")
-    private Long stockId;
+    private String stockId;
 
 }

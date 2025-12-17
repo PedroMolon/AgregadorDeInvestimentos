@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Stock {
 
     @Id
-    private Long stockId;
+    private String stockId;
 
     @Column(name = "description")
     private String description;
