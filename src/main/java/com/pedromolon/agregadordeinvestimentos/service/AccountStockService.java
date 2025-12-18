@@ -1,5 +1,6 @@
 package com.pedromolon.agregadordeinvestimentos.service;
 
+import com.pedromolon.agregadordeinvestimentos.client.BrapiClient;
 import com.pedromolon.agregadordeinvestimentos.dto.request.AddStockToAccountRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.AccountStockResponse;
 import com.pedromolon.agregadordeinvestimentos.entity.Account;
@@ -13,6 +14,7 @@ import com.pedromolon.agregadordeinvestimentos.repository.AccountStockRepository
 import com.pedromolon.agregadordeinvestimentos.repository.StockRepository;
 import com.pedromolon.agregadordeinvestimentos.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,16 +23,19 @@ import java.util.List;
 @Transactional
 public class AccountStockService {
 
+    @Value("${brapi.token}")
+    private String token;
+
     private final AccountRepository accountRepository;
     private final StockRepository stockRepository;
     private final AccountStockRepository accountStockRepository;
-    private final UserRepository userRepository;
+    private final BrapiClient brapiClient;
 
-    public AccountStockService(AccountRepository accountRepository, StockRepository stockRepository, AccountStockRepository accountStockRepository, UserRepository userRepository) {
+    public AccountStockService(AccountRepository accountRepository, StockRepository stockRepository, AccountStockRepository accountStockRepository, BrapiClient brapiClient) {
         this.accountRepository = accountRepository;
         this.stockRepository = stockRepository;
         this.accountStockRepository = accountStockRepository;
-        this.userRepository = userRepository;
+        this.brapiClient = brapiClient;
     }
 
     public AccountStockResponse addStockToAccount(Long userId, Long accountId, AddStockToAccountRequest request) {
@@ -54,7 +59,11 @@ public class AccountStockService {
         accountStock.setQuantity(request.quantity());
         accountStockRepository.save(accountStock);
 
-        return new AccountStockResponse(stock.getStockId(), stock.getDescription(), accountStock.getQuantity());
+        System.out.println("[DEBUG_LOG] Chamando Brapi para stockId: " + stock.getStockId() + " com token: " + (token != null ? "PRESENTE" : "NULO"));
+        var brapiResponse = brapiClient.getQuote(token, stock.getStockId());
+        var total = brapiResponse.results().getFirst().regularMarketPrice() * accountStock.getQuantity();
+
+        return new AccountStockResponse(stock.getStockId(), stock.getDescription(), accountStock.getQuantity(), total);
     }
 
     public List<AccountStockResponse> getAllStocks(Long userId, Long accountId) {
@@ -66,7 +75,10 @@ public class AccountStockService {
                 .stream()
                 .map(accountStock -> {
                     Stock stock = accountStock.getStock();
-                    return new AccountStockResponse(stock.getStockId(), stock.getDescription(), accountStock.getQuantity());
+                    var brapiResponse = brapiClient.getQuote(token, stock.getStockId());
+                    var total = brapiResponse.results().getFirst().regularMarketPrice() * accountStock.getQuantity();
+
+                    return new AccountStockResponse(stock.getStockId(), stock.getDescription(), accountStock.getQuantity(), total);
                 })
                 .toList();
     }

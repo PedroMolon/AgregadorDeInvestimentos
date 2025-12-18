@@ -1,6 +1,5 @@
 package com.pedromolon.agregadordeinvestimentos.service;
 
-import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.request.UserUpdateRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
 import com.pedromolon.agregadordeinvestimentos.entity.User;

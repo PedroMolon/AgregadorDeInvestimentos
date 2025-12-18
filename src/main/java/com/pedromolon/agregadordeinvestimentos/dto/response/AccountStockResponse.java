@@ -6,5 +6,6 @@ import lombok.Builder;
 public record AccountStockResponse(
         String stockId,
         String description,
-        Integer quantity
+        Integer quantity,
+        Double total
 ) {}
