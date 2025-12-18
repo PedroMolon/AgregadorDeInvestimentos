@@ -5,6 +5,8 @@ import com.pedromolon.agregadordeinvestimentos.dto.response.AccountResponse;
 import com.pedromolon.agregadordeinvestimentos.security.JWTUserData;
 import com.pedromolon.agregadordeinvestimentos.service.AccountService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,12 +37,14 @@ public class AccountController {
 
     @GetMapping("/accounts")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<AccountResponse>> getAllAccounts(
-            @AuthenticationPrincipal JWTUserData user
+    public ResponseEntity<Page<AccountResponse>> getAllAccounts(
+            @AuthenticationPrincipal JWTUserData user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         Long userId = user.userId();
 
-        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAllAccounts(userId));
+        return ResponseEntity.status(HttpStatus.OK).body(accountService.getAllAccounts(userId, PageRequest.of(page, size)));
     }
 
 }

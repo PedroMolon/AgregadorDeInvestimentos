@@ -11,6 +11,8 @@ import com.pedromolon.agregadordeinvestimentos.repository.AccountRepository;
 import com.pedromolon.agregadordeinvestimentos.repository.BillingAddressRepository;
 import com.pedromolon.agregadordeinvestimentos.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,14 +55,12 @@ public class AccountService {
     }
 
     @Transactional
-    public List<AccountResponse> getAllAccounts(Long userId) {
+    public Page<AccountResponse> getAllAccounts(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
-        return user.getAccounts()
-                .stream()
-                .map(accountMapper::toResponse)
-                .toList();
+        return accountRepository.findAllByUser(user, pageable)
+                .map(accountMapper::toResponse);
     }
 
 }

@@ -5,6 +5,8 @@ import com.pedromolon.agregadordeinvestimentos.dto.response.AccountStockResponse
 import com.pedromolon.agregadordeinvestimentos.security.JWTUserData;
 import com.pedromolon.agregadordeinvestimentos.service.AccountStockService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,12 +35,14 @@ public class AccountStockController {
     }
 
     @GetMapping("/{accountId}/stocks")
-    public ResponseEntity<List<AccountStockResponse>> getAllStocks(
+    public ResponseEntity<Page<AccountStockResponse>> getAllStocks(
             @AuthenticationPrincipal JWTUserData user,
-            @PathVariable Long accountId
+            @PathVariable Long accountId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         Long userId = user.userId();
-        return ResponseEntity.status(HttpStatus.OK).body(accountStockService.getAllStocks(userId, accountId));
+        return ResponseEntity.status(HttpStatus.OK).body(accountStockService.getAllStocks(userId, accountId, PageRequest.of(page, size)));
     }
 
 }
