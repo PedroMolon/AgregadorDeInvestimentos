@@ -1,6 +1,7 @@
 package com.pedromolon.agregadordeinvestimentos.service;
 
 import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
+import com.pedromolon.agregadordeinvestimentos.dto.request.UserUpdateRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
 import com.pedromolon.agregadordeinvestimentos.entity.User;
 import com.pedromolon.agregadordeinvestimentos.entity.enums.Role;
@@ -39,12 +40,14 @@ public class UserServiceTest {
 
     private User user;
     private UserRequest userRequest;
+    private UserUpdateRequest userUpdateRequest;
     private UserResponse userResponse;
 
     @BeforeEach
     void setUp() {
         user = new User(1L, "testUser", "test@email.com", "password", Collections.singleton(Role.ROLE_USER), null, null);
         userRequest = new UserRequest("newUser", "new@email.com", "password");
+        userUpdateRequest = new UserUpdateRequest("newUser", "new@email.com", "password");
         userResponse = new UserResponse(1L, "newUser", "new@email.com", LocalDateTime.now());
     }
 
@@ -55,7 +58,7 @@ public class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userMapper.toResponse(any(User.class))).thenReturn(userResponse);
 
-        var response = userService.updateUser(1L, userRequest);
+        var response = userService.updateUser(1L, userUpdateRequest);
 
         assertNotNull(response);
         assertEquals(userResponse.id(), response.id());
@@ -72,7 +75,7 @@ public class UserServiceTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> {
-            userService.updateUser(1L, userRequest);
+            userService.updateUser(1L, userUpdateRequest);
         });
 
         verify(userRepository, times(1)).findById(1L);

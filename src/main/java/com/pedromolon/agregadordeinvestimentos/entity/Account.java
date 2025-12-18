@@ -28,10 +28,10 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private BillingAddress billingAddress;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountStock> accountStocks;
 
 }

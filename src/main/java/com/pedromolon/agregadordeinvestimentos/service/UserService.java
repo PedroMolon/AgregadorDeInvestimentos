@@ -1,6 +1,7 @@
 package com.pedromolon.agregadordeinvestimentos.service;
 
 import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
+import com.pedromolon.agregadordeinvestimentos.dto.request.UserUpdateRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
 import com.pedromolon.agregadordeinvestimentos.entity.User;
 import com.pedromolon.agregadordeinvestimentos.exceptions.UserNotFoundException;
@@ -28,12 +29,17 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
-    public UserResponse updateUser(Long id, UserRequest request) {
+    public UserResponse updateUser(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        user.setUsername(request.username());
-        user.setEmail(request.email());
+        if (request.username() != null && !request.username().isBlank()) {
+            user.setUsername(request.username());
+        }
+
+        if (request.email() != null && !request.email().isBlank()) {
+            user.setEmail(request.email());
+        }
 
         if (request.password() != null && !request.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.password()));

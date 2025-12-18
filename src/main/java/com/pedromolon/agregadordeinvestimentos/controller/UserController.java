@@ -1,9 +1,10 @@
 package com.pedromolon.agregadordeinvestimentos.controller;
 
-import com.pedromolon.agregadordeinvestimentos.dto.request.UserRequest;
+import com.pedromolon.agregadordeinvestimentos.dto.request.UserUpdateRequest;
 import com.pedromolon.agregadordeinvestimentos.dto.response.UserResponse;
 import com.pedromolon.agregadordeinvestimentos.security.JWTUserData;
 import com.pedromolon.agregadordeinvestimentos.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +24,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UserResponse> updateUser(
             @AuthenticationPrincipal JWTUserData user,
-            @RequestBody UserRequest request
+            @RequestBody @Valid UserUpdateRequest request
     ) {
         Long userId = user.userId();
 
