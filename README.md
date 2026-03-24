@@ -1,111 +1,106 @@
-# Agregador de Investimentos API
+# 💰 Agregador de Investimentos API
 
-![Java](https://img.shields.io/badge/Java-21-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
-![Redis](https://img.shields.io/badge/Redis-7-red)
-![Docker](https://img.shields.io/badge/Docker-blue)
+[![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen?style=for-the-badge&logo=springboot)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7-red?style=for-the-badge&logo=redis)](https://redis.io/)
+[![Docker](https://img.shields.io/badge/Docker-Container-blue?style=for-the-badge&logo=docker)](https://www.docker.com/)
 
-API para agregação e gerenciamento de portfólios de investimentos, permitindo que usuários cadastrem contas e monitorem o valor de suas ações.
-
----
-
-## 🚀 Funcionalidades
-
-- **Gerenciamento de Usuários:** Cadastro e autenticação segura de usuários com JWT (JSON Web Tokens).
-- **Contas de Investimento:** Criação de múltiplas contas por usuário para organizar os investimentos.
-- **Portfólio de Ações:** Adição de ações (ações) a uma conta de investimento.
-- **Cotações em Tempo Real:** Integração com a API [Brapi](https://brapi.dev/) para buscar cotações atualizadas das ações.
-- **Cache de Performance:** Utilização de Redis para armazenar em cache as cotações, melhorando a performance e diminuindo a latência.
-- **Documentação da API:** Geração automática de documentação com Springdoc (Swagger UI).
+A **Agregador de Investimentos API** é uma solução moderna para a gestão centralizada de portfólios de investimentos, permitindo que usuários monitorem em tempo real o valor de suas ações através da integração com APIs do mercado financeiro.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🚀 Tecnologias e Ferramentas
 
-- **Backend:**
-  - [Java 21](https://www.oracle.com/java/)
-  - [Spring Boot](https://spring.io/projects/spring-boot)
-  - [Spring Web](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
-  - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
-  - [Spring Security](https://spring.io/projects/spring-security)
-- **Banco de Dados:**
-  - [PostgreSQL](https://www.postgresql.org/)
-  - [Flyway](https://flywaydb.org/) (para versionamento de schema)
-- **Cache:**
-  - [Redis](https://redis.io/)
-- **Comunicação API:**
-  - [OpenFeign](https://docs.spring.io/spring-cloud-openfeign/docs/current/reference/html/) (para chamadas à API Brapi)
-- **Desenvolvimento:**
-  - [Maven](https://maven.apache.org/)
-  - [Lombok](https://projectlombok.org/)
-  - [MapStruct](https://mapstruct.org/)
-  - [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+O projeto utiliza uma stack focada em performance e escalabilidade financeira:
+
+* **Linguagem:** Java 21 (LTS)
+* **Framework:** Spring Boot 4.0.0
+* **Cache:** **Redis** (para armazenamento em cache de cotações e performance)
+* **Comunicação API:** **OpenFeign** (integração com a API Brapi para cotações)
+* **Persistência & ORM:** Spring Data JPA e Hibernate
+* **Banco de Dados:** PostgreSQL 16
+* **Migrações de Banco:** Flyway
+* **Segurança:** Spring Security com autenticação JWT
+* **Mapeamento de Objetos:** MapStruct e Lombok
+* **Conteinerização:** Docker e Docker Compose
 
 ---
 
-## 📋 Pré-requisitos
+## 🛠️ Funcionalidades Principais
 
-Antes de começar, você vai precisar ter instalado em sua máquina:
-- [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) ou superior.
-- [Apache Maven](https://maven.apache.org/download.cgi) 3.8 ou superior.
-- [Docker](https://www.docker.com/products/docker-desktop/) e [Docker Compose](https://docs.docker.com/compose/install/).
+* **Gerenciamento de Usuários:** Cadastro e autenticação segura com tokens JWT.
+* **Cotações em Tempo Real:** Busca automatizada de preços de ações via API [Brapi](https://brapi.dev/).
+* **Cache Inteligente:** Utilização de Redis para minimizar chamadas externas e reduzir latência.
+* **Portfólio de Ações:** Adição de ativos a contas específicas para monitoramento.
+* **Documentação Interativa:** Geração automática com Springdoc (Swagger UI).
+
+### 🛡️ Segurança com JWT (Stateless)
+O projeto implementa uma camada robusta de segurança financeira:
+* **Autenticação via JWT:** Tokens seguros para autenticação sem estado.
+* **Proteção de Endpoints:** Controle de acesso granular baseado em permissões de usuário.
+* **Criptografia:** Armazenamento seguro de senhas com BCrypt.
 
 ---
 
-## ⚙️ Configuração e Execução
+## 📂 Arquitetura do Projeto
 
-Siga os passos abaixo para executar o projeto localmente.
+O projeto é estruturado seguindo os princípios de camadas para garantir separação de responsabilidades:
 
-### 1. Clone o Repositório
+1.  **Controller:** Camada de entrada, validação de DTOs e orquestração de respostas REST.
+2.  **Service:** Onde reside toda a lógica de negócio financeira e de investimentos.
+3.  **Client:** Camada de integração externa (Brapi via Feign).
+4.  **Repository:** Acesso aos dados persistentes no PostgreSQL.
+5.  **Mapper:** Conversão eficiente entre Entidades JPA e DTOs.
 
+---
+
+## ⚙️ Como Executar o Projeto
+
+### Pré-requisitos
+* Docker e Docker Compose instalados.
+* JDK 21 ou superior.
+* Uma chave de API da **Brapi** ([Brapi Dev](https://brapi.dev/)).
+
+### Passo a Passo
+
+1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/AgregadorDeInvestimentos.git
+git clone https://github.com/PedroMolon/AgregadorDeInvestimentos.git
 cd AgregadorDeInvestimentos
 ```
 
-### 2. Configure as Variáveis de Ambiente
-
-A aplicação requer duas variáveis de ambiente para funcionar corretamente. Crie um arquivo `.env` na raiz do projeto ou configure as variáveis diretamente no seu sistema.
-
+2. **Configure as variáveis de ambiente:**
+   Crie um arquivo `.env` na raiz do projeto:
 ```env
-# Chave secreta para a geração e validação dos tokens JWT.
-# Use um valor longo e aleatório.
-SECRET=SUA_CHAVE_SECRETA_AQUI
-
-# Token de acesso para a API da Brapi.
-# Obtenha seu token em https://brapi.dev/
-TOKEN=SEU_TOKEN_DA_BRAPI_AQUI
+SECRET=SUA_CHAVE_SECRETA_JWT
+TOKEN=SEU_TOKEN_DA_BRAPI
 ```
 
-O arquivo `docker-compose.yaml` está configurado para carregar o arquivo `.env` automaticamente.
-
-### 3. Inicie os Serviços com Docker Compose
-
-O `docker-compose.yaml` no projeto irá iniciar os contêineres do **PostgreSQL** e do **Redis** com as configurações necessárias (`ports`, `volumes`, `passwords`, etc.).
-
+3. **Inicie os serviços (PostgreSQL e Redis) com Docker Compose:**
 ```bash
 docker-compose up -d
 ```
 
-Este comando irá baixar as imagens (se necessário) e iniciar os serviços em background.
-
-### 4. Execute a Aplicação Spring Boot
-
-Finalmente, execute a aplicação usando o Maven Wrapper.
-
+4. **Execute a aplicação:**
 ```bash
 ./mvnw spring-boot:run
 ```
 
-A API estará em execução e acessível em `http://localhost:8080`.
+---
+
+## 📝 Documentação da API (Endpoints Principais)
+
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/auth/login` | Autenticação e geração de token JWT |
+| `GET` | `/stocks` | Consulta de cotações de ações |
+| `GET` | `/users` | Gerenciamento de usuários e contas |
+| `GET` | `/swagger-ui.html` | Documentação Swagger completa |
 
 ---
 
-## 📚 Documentação da API (Swagger)
+## 👨‍💻 Autor
 
-Com a aplicação em execução, você pode acessar a documentação interativa da API (Swagger UI) no seu navegador:
-
-[**http://localhost:8080/swagger-ui.html**](http://localhost:8080/swagger-ui.html)
-
-Lá você poderá visualizar todos os endpoints, seus DTOs (Data Transfer Objects) e testá-los diretamente.
+Desenvolvido com ☕ por **Pedro Molon**.
+Conecte-se comigo no [LinkedIn](https://www.linkedin.com/in/pedromolon/) ou veja outros projetos no meu [GitHub](https://github.com/PedroMolon).
